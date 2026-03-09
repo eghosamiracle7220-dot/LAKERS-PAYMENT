@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Shop P2P Payment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #000000 0%, #2d2d2d 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #ffffff;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 500px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header {
+            background: linear-gradient(to right, #000000, #ff0050);
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #ff0050;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .status-indicator {
+            position: absolute;
+            right: 30px;
+            top: 25px;
+            background-color: #ffcc00;
+            color: #000000;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .payment-content {
+            padding: 30px;
+        }
+        
+        .payment-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            text-align: center;
+            color: #ffffff;
+        }
+        
+        .payment-details {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .detail-label {
+            color: #cccccc;
+        }
+        
+        .detail-value {
+            font-weight: 600;
+            color: #ffffff;
+        }
+        
+        .amount-highlight {
+            font-size: 42px;
+            font-weight: 700;
+            text-align: center;
+            margin: 25px 0;
+            background: linear-gradient(to right, #ff0050, #ffcc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .btn-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(to right, #ff0050, #ff3366);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 80, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #cccccc;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .security-note {
+            text-align: center;
+            font-size: 14px;
+            color: #999999;
+            margin-top: 20px;
+        }
+        
+        .security-note i {
+            margin-right: 5px;
+        }
+        
+        .payment-confirmation {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            border-left: 4px solid #ff0050;
+            display: none;
+        }
+        
+        .confirmation-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #ffcc00;
+            text-align: center;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: #666666;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .countdown {
+            color: #ffcc00;
+            font-weight: 600;
+        }
+        
+        .payment-flow {
+            display: flex;
+            justify-content: space-between;
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .flow-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 2;
+        }
+        
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        .step-active {
+            background: #ff0050;
+        }
+        
+        .step-label {
+            font-size: 12px;
+            color: #cccccc;
+        }
+        
+        .flow-line {
+            position: absolute;
+            top: 20px;
+            left: 50px;
+            right: 50px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+        
+        .highlight-box {
+            background: rgba(255, 0, 80, 0.1);
+            border: 1px solid rgba(255, 0, 80, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .cancelled-message {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 15px;
+            }
+            
+            .payment-content {
+                padding: 20px;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">T</div>
+                TikTok Shop P2P
+            </div>
+            <div class="status-indicator">PENDING</div>
+        </div>
+        
+        <div class="payment-content">
+            <h2 class="payment-title">Payment Request</h2>
+            
+            <div class="payment-flow">
+                <div class="flow-line"></div>
+                <div class="flow-step">
+                    <div class="step-icon step-active">1</div>
+                    <div class="step-label">Details</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-icon">2</div>
+                    <div class="step-label">Confirm</div>
+                </div>
+                <div class="flow-step">
+                    <div class="step-icon">3</div>
+                    <div class="step-label">Complete</div>
+                </div>
+            </div>
+            
+            <div class="payment-details">
+                <div class="detail-row">
+                    <span class="detail-label">Buyer:</span>
+                    <span class="detail-value">Jjc3217@gmail.com (Justin Christopher)</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Seller:</span>
+                    <span class="detail-value">aurore.grassart@yahoo.fr</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Platform:</span>
+                    <span class="detail-value">TikTok Shop</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Transaction ID:</span>
+                    <span class="detail-value">TTSP2P-2023-5872</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Category:</span>
+                    <span class="detail-value">Family and Friends</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Expires in:</span>
+                    <span class="detail-value"><span class="countdown">14:59</span> minutes</span>
+                </div>
+            </div>
+            
+            <div class="highlight-box">
+                <div class="detail-row">
+                    <span class="detail-label">Payment Type:</span>
+                    <span class="detail-value">Family and Friends Only</span>
+                </div>
+            </div>
+            
+            <div class="amount-highlight">3 TikTok Lion</div>
+            
+            <div class="btn-container">
+                <button class="btn btn-primary" id="payNowBtn">Pay Now</button>
+                <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
+            </div>
+            
+            <div class="security-note">
+                <i class="fas fa-lock"></i> Secured by TikTok Shop • Funds protected by TikTok P2P Guarantee
+            </div>
+            
+            <div class="payment-confirmation" id="paymentConfirmation">
+                <div class="confirmation-title">Payment Confirmation</div>
+                <div class="detail-row">
+                    <span class="detail-label">From:</span>
+                    <span class="detail-value">Jjc3217@gmail.com (Justin Christopher)</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">To:</span>
+                    <span class="detail-value">aurore.grassart@yahoo.fr</span>
+                </div>
+                <div class="highlight-box">
+                    <div class="detail-row">
+                        <span class="detail-label">Amount:</span>
+                        <span class="detail-value">3 TikTok Lion</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Category:</span>
+                        <span class="detail-value">Family and Friends Only</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Transaction Fee:</span>
+                    <span class="detail-value">$0.00</span>
+                </div>
+                <div class="btn-container">
+                    <button class="btn btn-primary" id="confirmBtn">Confirm Payment</button>
+                    <button class="btn btn-secondary" id="editBtn">Edit</button>
+                </div>
+            </div>
+            
+            <div class="success-message" id="successMessage">
+                <div style="font-size: 48px; color: #00ff88; margin-bottom: 15px;">✓</div>
+                <h3 style="color: #00ff88; margin-bottom: 15px;">Payment Successful!</h3>
+                <p>Your payment of 3 TikTok Lion has been sent to aurore.grassart@yahoo.fr</p>
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-primary" id="newPaymentBtn">New Payment</button>
+                </div>
+            </div>
+            
+            <div class="cancelled-message" id="cancelledMessage">
+                <div style="font-size: 48px; color: #ffcc00; margin-bottom: 15px;">ⓘ</div>
+                <h3 style="color: #ffcc00; margin-bottom: 15px;">Payment Cancelled</h3>
+                <p>The payment request has been cancelled.</p>
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-primary" id="returnBtn">Return to TikTok Shop</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            TikTok Shop P2P Payments • Transaction powered by TikTok Shop API
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const payNowBtn = document.getElementById('payNowBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const confirmBtn = document.getElementById('confirmBtn');
+            const editBtn = document.getElementById('editBtn');
+            const newPaymentBtn = document.getElementById('newPaymentBtn');
+            const returnBtn = document.getElementById('returnBtn');
+            const paymentConfirmation = document.getElementById('paymentConfirmation');
+            const successMessage = document.getElementById('successMessage');
+            const cancelledMessage = document.getElementById('cancelledMessage');
+            const countdownElement = document.querySelector('.countdown');
+            const flowSteps = document.querySelectorAll('.flow-step');
+            
+            // Elements to hide during different states
+            const initialElements = document.querySelector('.payment-details, .highlight-box, .amount-highlight, .btn-container, .security-note');
+            
+            // Countdown timer (15 minutes)
+            let timeLeft = 15 * 60;
+            function updateCountdown() {
+                if (timeLeft <= 0) {
+                    countdownElement.textContent = "00:00";
+                    // Auto-cancel when time expires
+                    if (!successMessage.style.display && !cancelledMessage.style.display) {
+                        cancelPayment();
+                    }
+                    return;
+                }
+                
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                
+                countdownElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                timeLeft--;
+                
+                setTimeout(updateCountdown, 1000);
+            }
+            
+            updateCountdown();
+            
+            // Payment processing flow
+            payNowBtn.addEventListener('click', function() {
+                initialElements.style.display = 'none';
+                paymentConfirmation.style.display = 'block';
+                
+                // Update flow step
+                flowSteps[0].querySelector('.step-icon').classList.remove('step-active');
+                flowSteps[1].querySelector('.step-icon').classList.add('step-active');
+            });
+            
+            confirmBtn.addEventListener('click', function() {
+                paymentConfirmation.style.display = 'none';
+                successMessage.style.display = 'block';
+                
+                // Update status indicator and flow step
+                document.querySelector('.status-indicator').textContent = 'COMPLETED';
+                document.querySelector('.status-indicator').style.backgroundColor = '#00ff88';
+                document.querySelector('.status-indicator').style.color = '#000000';
+                
+                flowSteps[1].querySelector('.step-icon').classList.remove('step-active');
+                flowSteps[2].querySelector('.step-icon').classList.add('step-active');
+            });
+            
+            editBtn.addEventListener('click', function() {
+                paymentConfirmation.style.display = 'none';
+                initialElements.style.display = 'block';
+                
+                // Revert flow step
+                flowSteps[1].querySelector('.step-icon').classList.remove('step-active');
+                flowSteps[0].querySelector('.step-icon').classList.add('step-active');
+            });
+            
+            cancelBtn.addEventListener('click', function() {
+                if (confirm('Are you sure you want to cancel this payment?')) {
+                    cancelPayment();
+                }
+            });
+            
+            function cancelPayment() {
+                initialElements.style.display = 'none';
+                if (paymentConfirmation.style.display === 'block') {
+                    paymentConfirmation.style.display = 'none';
+                }
+                cancelledMessage.style.display = 'block';
+                
+                // Update status indicator
+                document.querySelector('.status-indicator').textContent = 'CANCELLED';
+                document.querySelector('.status-indicator').style.backgroundColor = '#ff6666';
+            }
+            
+            newPaymentBtn.addEventListener('click', function() {
+                window.location.reload();
+            });
+            
+            returnBtn.addEventListener('click', function() {
+                // In a real scenario, redirect back to TikTok Shop
+                alert('Returning to TikTok Shop...');
+                window.location.href = 'https://www.tiktok.com/shop';
+            });
+        });
+    </script>
+</body>
+</html>
